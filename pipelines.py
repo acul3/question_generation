@@ -39,9 +39,9 @@ class QGPipeline:
         if self.ans_model is not self.model:
             self.ans_model.to(self.device)
 
-        assert self.model.__class__.__name__ in ["T5ForConditionalGeneration", "BartForConditionalGeneration"]
+        assert self.model.__class__.__name__ in ["MT5ForConditionalGeneration", "BartForConditionalGeneration"]
         
-        if "T5ForConditionalGeneration" in self.model.__class__.__name__:
+        if "MT5ForConditionalGeneration" in self.model.__class__.__name__:
             self.model_type = "t5"
         else:
             self.model_type = "bart"
@@ -211,9 +211,9 @@ class E2EQGPipeline:
         self.device = "cuda" if torch.cuda.is_available() and use_cuda else "cpu"
         self.model.to(self.device)
 
-        assert self.model.__class__.__name__ in ["T5ForConditionalGeneration", "BartForConditionalGeneration"]
+        assert self.model.__class__.__name__ in ["MT5ForConditionalGeneration", "BartForConditionalGeneration"]
         
-        if "T5ForConditionalGeneration" in self.model.__class__.__name__:
+        if "MT5ForConditionalGeneration" in self.model.__class__.__name__:
             self.model_type = "t5"
         else:
             self.model_type = "bart"

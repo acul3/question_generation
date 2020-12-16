@@ -109,10 +109,9 @@ class SquadMultitask(nlp.GeneratorBasedBuilder):
             "dev": os.path.join(self._URL, self._DEV_FILE),
         }
         downloaded_files = dl_manager.download_and_extract(urls_to_download)
-
         return [
-            nlp.SplitGenerator(name=nlp.Split.TRAIN, gen_kwargs={"filepath": downloaded_files["train"]}),
-            nlp.SplitGenerator(name=nlp.Split.VALIDATION, gen_kwargs={"filepath": downloaded_files["dev"]}),
+            nlp.SplitGenerator(name=nlp.Split.TRAIN, gen_kwargs={"filepath": "/content/question_generation/data/squad_multitask/squad1-tydiqa-train.json"}),
+            nlp.SplitGenerator(name=nlp.Split.VALIDATION, gen_kwargs={"filepath": "/content/question_generation/data/squad_multitask/squad1-tydiqa-dev.json"}),
         ]
     
     def _get_correct_alignement(self, context, answer):
@@ -127,7 +126,8 @@ class SquadMultitask(nlp.GeneratorBasedBuilder):
         elif context[start_idx-2:end_idx-2] == gold_text:
             return start_idx-2, end_idx-2   # When the gold label is off by two character
         else:
-            raise ValueError()
+            print(gold_text,start_idx,end_idx,context[start_idx:end_idx])
+            return start_idx, end_idx
     
     def process_qa_text(self, context, question, answer):
         ans_gen_input = f"question: {question}  context: {context}"

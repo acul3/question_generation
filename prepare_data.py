@@ -146,7 +146,7 @@ def main():
     )
 
     if data_args.model_type == 't5':
-        tokenizer = T5Tokenizer.from_pretrained("t5-base")
+        tokenizer = T5Tokenizer.from_pretrained("google/mt5-base")
     else:
         tokenizer = T5Tokenizer.from_pretrained("bart-base")
     
