@@ -110,8 +110,8 @@ class SquadMultitask(nlp.GeneratorBasedBuilder):
         }
         downloaded_files = dl_manager.download_and_extract(urls_to_download)
         return [
-            nlp.SplitGenerator(name=nlp.Split.TRAIN, gen_kwargs={"filepath": "/content/question_generation/data/squad_multitask/squad1-tydiqa-train.json"}),
-            nlp.SplitGenerator(name=nlp.Split.VALIDATION, gen_kwargs={"filepath": "/content/question_generation/data/squad_multitask/squad1-tydiqa-dev.json"}),
+            nlp.SplitGenerator(name=nlp.Split.TRAIN, gen_kwargs={"filepath": "squad1-tydiqa-train.json"}),
+            nlp.SplitGenerator(name=nlp.Split.VALIDATION, gen_kwargs={"filepath": "squad1-tydiqa-dev.json"}),
         ]
     
     def _get_correct_alignement(self, context, answer):
