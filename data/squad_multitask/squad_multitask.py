@@ -25,7 +25,7 @@ import os
 import nltk
 nltk.download('punkt')
 
-import nlp
+import datasets
 
 
 _CITATION = """\
@@ -56,7 +56,7 @@ QG_FORMATS = [
 ]
 
 
-class SquadMultitaskConfig(nlp.BuilderConfig):
+class SquadMultitaskConfig(datasets.BuilderConfig):
     """BuilderConfig for SQUAD."""
 
     def __init__(self, qg_format="highlight", **kwargs):
@@ -69,7 +69,7 @@ class SquadMultitaskConfig(nlp.BuilderConfig):
         self.qg_format = qg_format
 
 
-class SquadMultitask(nlp.GeneratorBasedBuilder):
+class SquadMultitask(datasets.GeneratorBasedBuilder):
     """SQUAD: The Stanford Question Answering Dataset. Version 1.1."""
 
     _URL = "https://rajpurkar.github.io/SQuAD-explorer/dataset/"
@@ -79,7 +79,7 @@ class SquadMultitask(nlp.GeneratorBasedBuilder):
     BUILDER_CONFIGS = [
         SquadMultitaskConfig(
             name=f"{format_}_qg_format",
-            version=nlp.Version("1.0.0", "New split API (https://tensorflow.org/datasets/splits)"),
+            version=datasets.Version("1.0.0", "New split API (https://tensorflow.org/datasets/splits)"),
             description="Plain text",
             qg_format=format_
         )
@@ -87,13 +87,13 @@ class SquadMultitask(nlp.GeneratorBasedBuilder):
     ]
 
     def _info(self):
-        return nlp.DatasetInfo(
+        return datasets.DatasetInfo(
             description=_DESCRIPTION,
-            features=nlp.Features(
+            features=datasets.Features(
                 {
-                    "source_text": nlp.Value("string"),
-                    "target_text": nlp.Value("string"),
-                    "task": nlp.Value("string"),
+                    "source_text": datasets.Value("string"),
+                    "target_text": datasets.Value("string"),
+                    "task": datasets.Value("string"),
                 }
             ),
             # No default supervised_keys (as we have to pass both question
@@ -104,14 +104,9 @@ class SquadMultitask(nlp.GeneratorBasedBuilder):
         )
 
     def _split_generators(self, dl_manager):
-        urls_to_download = {
-            "train": os.path.join(self._URL, self._TRAINING_FILE),
-            "dev": os.path.join(self._URL, self._DEV_FILE),
-        }
-        downloaded_files = dl_manager.download_and_extract(urls_to_download)
         return [
-            nlp.SplitGenerator(name=nlp.Split.TRAIN, gen_kwargs={"filepath": "squad1-tydiqa-train.json"}),
-            nlp.SplitGenerator(name=nlp.Split.VALIDATION, gen_kwargs={"filepath": "squad1-tydiqa-dev.json"}),
+            datasets.SplitGenerator(name=datasets.Split.TRAIN, gen_kwargs={"filepath": "/content/question_generation/data/squad_multitask/translate2.0-train-id-no_answerable.json"}),
+            datasets.SplitGenerator(name=datasets.Split.VALIDATION, gen_kwargs={"filepath": "/content/question_generation/data/squad_multitask/id-squad1.1.json"}),
         ]
     
     def _get_correct_alignement(self, context, answer):
@@ -214,12 +209,6 @@ class SquadMultitask(nlp.GeneratorBasedBuilder):
                 for paragraph in article["paragraphs"]:
                     context = paragraph["context"].strip()
                     
-                    if 'ans_ext' in tasks:
-                        ans_ext_examples = self.process_ans_ext(paragraph)
-                        for example in ans_ext_examples:
-                                yield count, example
-                                count += 1
-                    
                     if 'e2e_qg' in tasks:
                         yield count, self.process_e2e_qg(paragraph)
-                        count += 1
+                        count +=1
